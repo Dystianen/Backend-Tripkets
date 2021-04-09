@@ -9,8 +9,8 @@ class Transaction extends Model
 {
     use HasFactory;
     protected $table = 'transactions';
-    protected $primary_key = 'id';
-    protected $fillable = ['id_user', 'id_transportation', 'check_in', 'check_out'];
+    protected $primaryKey = 'id';
+    protected $fillable = ['id','id_user','id_transportation', 'check_in', 'status', 'jumlah'];
     protected $hidden = ['created_at', 'upadated_at'];
 
     public function user(){

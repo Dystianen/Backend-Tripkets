@@ -17,12 +17,14 @@ class CreateTransportationsTable extends Migration
             $table->bigIncrements('id_transportation');
             $table->unsignedBigInteger('id_category');
             $table->string('transportation_name');
+            $table->string('stasiun_keberangkatan');
+            $table->string('stasiun_tujuan');
             $table->string('price');
             $table->datetime('departure');
             $table->datetime('till');
             $table->timestamps();
 
-            $table->foreign('id_category')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('id_category')->references('id_category')->on('categories')->onDelete('cascade');
         });
     }
 

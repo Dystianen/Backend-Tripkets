@@ -53,26 +53,24 @@ class UserController extends Controller
         $data->password = Hash::make($request->password);
         $data->phone_number = $request->phone_number;
         $data->location = $request->location;
+        $data->role = 'user';
         $data->save();
 
         return $this->response->successResponseData('Insert user success', $data);
     }
 
-    //UPDATE EMAIL AND PASSWORD
-    public function store(Request $request, $id){
-        $validator = Validator::make($request->all(), [
-            'email'=> 'required|string|unique:Users',
-            'password' => 'required|string|min:6',
-        ]);
-        if($validator->fails()){
-            return $this->response->errorResponse($validator->errors());
-        }
+    //UPDATE
+    public function edit(Request $request, $id){
         $data = User::where('id', $id)->first();
+        $data->nik = $request->nik;
+        $data->name = $request->name;
         $data->email = $request->email;
         $data->password = Hash::make($request->password);
+        $data->phone_number = $request->phone_number;
+        $data->location = $request->location;
         $data->save();
 
-        return $this->response->successResponseData('Update email & password success', $data);
+        return $this->response->successResponseData('Update data masyarakat success', $data);
     }
 
     //DELETE USER

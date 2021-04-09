@@ -13,7 +13,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 class TransportationController extends Controller
 {
     public $response, $user;
-    public function __construct(){
+    public function __construct (){
         $this->response = new ResponseHelper();
 
         $this->user = JWTAuth::parseToken()->authenticate();
@@ -33,36 +33,25 @@ class TransportationController extends Controller
     }
 
     //GET BY ID
-    public function getByID($id)
+    public function getByID($id_transportation)
     {
-        $data["transortations"] = Transportation::where('id_category', $id)->get();
+        $data["transportations"] = Transportation::where('id_transportation', $id_transportation)->get();
         return $this->response->successData($data);
     }
 
     //FIND
     public function find(Request $request, $limit = 10, $offset = 0)
     {
-        $find = $request->find;
-        $data = Transportation::where("id","like","%$find%")
-        ->orWhere("id_category","like","%$find%")
-        ->orWhere("transportation_name","like","%$find%")
-        ->orWhere("price","like","%$find%");
-        $data["count"] = $data->count();
-        $datas = array();
-        foreach ($data->skip($offset)->take($limit)->get() as $p) {
-          $item = [
-            "id" => $p->id,
-            "id_category" => $p->id_category,
-            "transportation_name" => $p->transportation_name,
-            "price" => $p->price,
-            "created_at" => $p->created_at,
-            "updated_at" => $p->updated_at
-          ];
-          array_push($books,$item);
+        $stasiunkeberangkatan = $request->stasiunkeberangkatan;
+        $stasiuntujuan = $request->stasiuntujuan;
+        $data["count"] = Transportation::count();
+
+        if($limit == NULL && $offset == NULL){
+            $data["transportations"] = Transportation::where([['stasiun_keberangkatan','like', "%$stasiunkeberangkatan%"], ['stasiun_tujuan','like', "%$stasiuntujuan%"]])->orderBy('id_transportation', 'desc')->with('category')->get();
+        } else {
+            $data["transportations"] = Transportation::where([['stasiun_keberangkatan','like', "%$stasiunkeberangkatan%"], ['stasiun_tujuan','like', "%$stasiuntujuan%"]])->orderBy('id_transportation', 'desc')->with('category')->take($limit)->skip($offset)->get();
         }
-        $data["transportation"] = $datas;
-        $data["status"] = 1;
-        return $this->response->successResponseData('pencarian anda ada disini1',$data);
+        return $this->response->successData($data);
     }
 
     //INSERT
@@ -78,34 +67,35 @@ class TransportationController extends Controller
         $data = new Transportation();
         $data->id_category = $request->id_category;
         $data->transportation_name = $request->transportation_name;
+        $data->stasiun_keberangkatan = $request->stasiun_keberangkatan;
+        $data->stasiun_tujuan = $request->stasiun_tujuan;
         $data->price = $request->price;
+        $data->departure = $request->departure;
+        $data->till = $request->till;
         $data->save();
+        $data = Transportation::where('id_transportation','=', $data->id_transportation)->first();
 
         return $this->response->successResponseData('Insert transportation success', $data);
     }
 
     //UPDATE
     public function update(Request $request, $id){
-        $validator = Validator::make($request->all(), [
-            'id_category' => 'required|string',
-            'transportation_name' => 'required|string',
-            'price' => 'required|numeric',
-        ]);
-        if($validator->fails()){
-            return $this->response->errorResponse($validator->errors());
-        }
-        $data = Transportation::where('id', $id)->first();
+        $data = Transportation::where('id_transportation', $id)->first();
         $data->id_category = $request->id_category;
         $data->transportation_name = $request->transportation_name;
+        $data->stasiun_keberangkatan = $request->stasiun_keberangkatan;
+        $data->stasiun_tujuan = $request->stasiun_tujuan;
         $data->price = $request->price;
+        $data->departure = $request->departure;
+        $data->till = $request->till;
         $data->save();
 
         return $this->response->successResponseData('Update Transportation success', $data);
     }
 
     //DELETE
-    public function destroy($id){
-        $delete = Transportation::where('id', $id)->delete();
+    public function destroy($id_transportation){
+        $delete = Transportation::where('id_transportation', $id_transportation)->delete();
         if($delete){
             return $this->response->successResponse('Delete transaction success');
         } else {

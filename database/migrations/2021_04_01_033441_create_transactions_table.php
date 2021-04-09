@@ -20,13 +20,12 @@ class CreateTransactionsTable extends Migration
             $table->unsignedBigInteger('id_category');
             $table->string('jumlah');
             $table->date('check_in');
-            $table->date('check_out');
             $table->set('status', ['booked', 'finish', 'cancel']);
             $table->timestamps();
 
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('id_transportation')->references('id_transportation')->on('transportations')->onDelete('cascade');
-            $table->foreign('id_category')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('id_category')->references('id_category')->on('categories')->onDelete('cascade');
 
         });
     }

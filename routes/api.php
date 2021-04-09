@@ -25,53 +25,37 @@ Route::group(['middleware' => ['jwt.verify:admin,user']], function () {
     Route::post('logout', [LoginController::class,'logout']);   
 });
 
-Route::group(['middleware' => ['jwt.verify:admin']], function () {
-    //API CATEGORY
-    Route::get('category', [CategoryController::class,'getAll']);
-    Route::get('category/{id}', [CategoryController::class,'getByID']);
+// Route::group(['middleware' => ['jwt.verify: admin']], function () {
 
     //API TRANSACTION
     Route::get('transaction', [TransactionController::class, 'getAllTransaction']);
     Route::get('transaction/{limit}/{offset}', [TransactionController::class, 'getAllTransaction']);
     Route::get('transaction/{id}', [TransactionController::class, 'getById']);
-    Route::post('transaction/status/{id}', [TransactionController::class, 'changeStatus']);
+    Route::put('transaction/status/{id}', [TransactionController::class, 'changeStatus']);
     Route::post('transaction', [TransactionController::class, 'insert']);
-
-    //API USER
-    Route::get('user', [UserController::class, 'getAll']);
-    Route::get('user/{id}', [UserController::class, 'getById']);
-    Route::post('user/insert', [UserController::class, 'insert']);
-    Route::post('user/update', [UserController::class, 'update']);
-    Route::post('user/{id}', [UserController::class, 'destroy']);
-});
-
-Route::group(['middleware' => ['jwt.verify:user']], function () {
-    //API USER
-    Route::get('user', [UserController::class, 'getAll']);
-    Route::get('user/{limit}/{offset}', [UserController::class, 'getAll']);
-    Route::post('user/{id}', [UserController::class, 'getById']);
-    Route::post('user/update/{id}', [UserController::class, 'store']);
-
-    //API TRANSACTION
-    Route::get('transaction', [TransactionController::class, 'getAllTransaction']);
-    Route::get('transaction/{limit}/{offset}', [TransactionController::class, 'getAllTransaction']);
-    Route::get('transaction/{id}', [TransactionController::class, 'getById']);
-    Route::post('transaction', [TransactionController::class, 'insert']);
-    Route::post('transaction/status', [TransactionController::class, 'changeStatus']);
     Route::delete('transaction/{id}', [TransactionController::class, 'destroy']);
 
     //API TRANSPORTATION
     Route::get('transportation', [TransportationController::class, 'getAllTransportation']);
     Route::get('transportation/{limit}/{offset}', [TransportationController::class, 'getAllTransportation']);
-    Route::get('transportation/{id}', [TransportationController::class, 'getById']);
-    Route::post('transportation/insert', [TransportationController::class, 'insert']);
-    Route::post('transportation/update', [TransportationController::class, 'update']);
-    Route::delete('transportation/{id}', [TransportationController::class, 'delete']);
+    Route::get('transportation/{id_transportation}', [TransportationController::class, 'getById']);
+    Route::post('transportation', [TransportationController::class, 'insert']);
+    Route::post('findTransportation/{limit}/{offset}', [TransportationController::class, 'find']);
+    Route::put('transportation/{id}', [TransportationController::class, 'update']);
+    Route::delete('transportation/{id_transportation}', [TransportationController::class, 'destroy']);
+
+    //API USER
+    Route::get('user', [UserController::class, 'getAll']);
+    Route::get('user/{id}', [UserController::class, 'getById']);
+    Route::post('user', [UserController::class, 'insert']);
+    Route::put('user/{id}', [UserController::class, 'edit']);
+    Route::delete('user/{id}', [UserController::class, 'destroy']);
 
     //API CATEGORY
     Route::get('category', [CategoryController::class, 'getAll']);
     Route::get('category/{id}', [CategoryController::class, 'getById']);
     Route::delete('category/{id}', [CategoryController::class, 'destroy']);
-});
+// });
+
 
 

@@ -44,7 +44,7 @@ class TransactionController extends Controller
     }
 
     public function getById($id){
-        $data["transactions"] = Transaction::where('id', $id)->get();
+        $data["transactions"] = Transaction::where('id', $id)->with(['user','transportation'])->get();
         return $this->response->successData($data);
     }
 
@@ -53,8 +53,7 @@ class TransactionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'check_in' => 'required|string',
-            // 'check_out'=> 'required|string',
-            // 'id_transportation' => 'required|string'
+            'jumlah'=> 'required|string|max:100',
         ]);
         if($validator->fails()){
             return $this->response->errorResponse($validator->errors());
@@ -66,7 +65,6 @@ class TransactionController extends Controller
         $transaction->id_category = $request->id_category;
         $transaction->jumlah = $request->jumlah;
         $transaction->check_in = $request->check_in;
-        // $transaction->check_out = $request->check_out;
         $transaction->status = 'booked';
         $transaction->save();
 
@@ -86,7 +84,7 @@ class TransactionController extends Controller
             return $this->response->errorResponse($validator->errors());
         }
 
-        $data = Transation::where('id', $request->id)->first();
+        $data = Transaction::where('id', $request->id)->first();
         $data->check_in = $request->check_in;
         $data->check_out = $request->check_out;
         $data->id_transportation = $request->id_transportation;
@@ -98,13 +96,12 @@ class TransactionController extends Controller
     //UPDATE STATUS
     public function changeStatus(Request $request, $id){
         $validator = Validator::make($request->all(), [
-            // 'id'     => 'required',
-            'status' => 'required|string',
-        ]);
-        if($validator->fails()){
-            return $this->response->errorResponse($validator->errors());
-        }
+			'status' => 'required|string',
+		]);
 
+		if($validator->fails()){
+            return $request->all();
+		}
         $data = Transaction::where('id', $id)->first();
         $data->status = $request->status;
         $data->save();
