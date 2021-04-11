@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
-class TransportationController extends Controller
+class BuswayController extends Controller
 {
     public $response, $user;
     public function __construct (){
@@ -19,15 +19,16 @@ class TransportationController extends Controller
         $this->user = JWTAuth::parseToken()->authenticate();
     }
 
-    public function getAllTransportation($limit = NULL, $offset = NULL)
+    public function getAll($limit = NULL, $offset = NULL)
     {
         // GET ALL
         $data["count"] = Transportation::count();
         
         if($limit == NULL && $offset == NULL){
-            $data['transportations'] = Transportation::with('category')->get();
+            $data['transportations'] = Transportation::where("id_category","=","1")->with("category")->get();
         }else{
-            $data['transportations'] = Transportation::with('category')->take($limit)->skip($offset)->get();
+            $data['transportations'] = Transportation::where("id_category","=","1")->with("category")->get();
+            $data['transportations'] = Transportation::where("id_category","=","1")->with("category")->take($limit)->skip($offset)->get();
         }
         return $this->response->successData($data);
     }
@@ -42,14 +43,14 @@ class TransportationController extends Controller
     //FIND
     public function find(Request $request, $limit = 10, $offset = 0)
     {
-        $stasiunkeberangkatan = $request->stasiunkeberangkatan;
-        $stasiuntujuan = $request->stasiuntujuan;
+        $pdepart = $request->pdepart;
+        $ptill = $request->ptill;
         $data["count"] = Transportation::count();
 
         if($limit == NULL && $offset == NULL){
-            $data["transportations"] = Transportation::where([['stasiun_keberangkatan','like', "%$stasiunkeberangkatan%"], ['stasiun_tujuan','like', "%$stasiuntujuan%"]])->orderBy('id_transportation', 'desc')->with('category')->get();
+            $data["transportations"] = Transportation::where([['p_depart','like', "%$pdepart%"], ['p_till','like', "%$ptill%"]])->orderBy('id_transportation', 'desc')->get();
         } else {
-            $data["transportations"] = Transportation::where([['stasiun_keberangkatan','like', "%$stasiunkeberangkatan%"], ['stasiun_tujuan','like', "%$stasiuntujuan%"]])->orderBy('id_transportation', 'desc')->with('category')->take($limit)->skip($offset)->get();
+            $data["transportations"] = Transportation::where([['p_depart','like', "%$pdepart%"], ['p_till','like', "%$ptill%"]])->orderBy('id_transportation', 'desc')->take($limit)->skip($offset)->get();
         }
         return $this->response->successData($data);
     }
@@ -67,8 +68,8 @@ class TransportationController extends Controller
         $data = new Transportation();
         $data->id_category = $request->id_category;
         $data->transportation_name = $request->transportation_name;
-        $data->stasiun_keberangkatan = $request->stasiun_keberangkatan;
-        $data->stasiun_tujuan = $request->stasiun_tujuan;
+        $data->p_depart = $request->p_depart;
+        $data->p_till = $request->p_till;
         $data->price = $request->price;
         $data->departure = $request->departure;
         $data->till = $request->till;
@@ -83,8 +84,8 @@ class TransportationController extends Controller
         $data = Transportation::where('id_transportation', $id)->first();
         $data->id_category = $request->id_category;
         $data->transportation_name = $request->transportation_name;
-        $data->stasiun_keberangkatan = $request->stasiun_keberangkatan;
-        $data->stasiun_tujuan = $request->stasiun_tujuan;
+        $data->p_depart = $request->p_depart;
+        $data->p_till = $request->p_till;
         $data->price = $request->price;
         $data->departure = $request->departure;
         $data->till = $request->till;

@@ -4,9 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\TransportationController;
+use App\Http\Controllers\TrainController;
+use App\Http\Controllers\BuswayController;
+use App\Http\Controllers\PlaneController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -35,14 +36,32 @@ Route::group(['middleware' => ['jwt.verify:admin,user']], function () {
     Route::post('transaction', [TransactionController::class, 'insert']);
     Route::delete('transaction/{id}', [TransactionController::class, 'destroy']);
 
-    //API TRANSPORTATION
-    Route::get('transportation', [TransportationController::class, 'getAllTransportation']);
-    Route::get('transportation/{limit}/{offset}', [TransportationController::class, 'getAllTransportation']);
-    Route::get('transportation/{id_transportation}', [TransportationController::class, 'getById']);
-    Route::post('transportation', [TransportationController::class, 'insert']);
-    Route::post('findTransportation/{limit}/{offset}', [TransportationController::class, 'find']);
-    Route::put('transportation/{id}', [TransportationController::class, 'update']);
-    Route::delete('transportation/{id_transportation}', [TransportationController::class, 'destroy']);
+    //API TRAIN
+    Route::get('train', [TrainController::class, 'getAll']);
+    Route::get('train/{limit}/{offset}', [TrainController::class, 'getAll']);
+    Route::get('train/{id_transportation}', [TrainController::class, 'getById']);
+    Route::post('train', [TrainController::class, 'insert']);
+    Route::post('findTrain/{limit}/{offset}', [TrainController::class, 'find']);
+    Route::put('train/{id}', [TrainController::class, 'update']);
+    Route::delete('train/{id_transportation}', [TrainController::class, 'destroy']);
+
+    //API PLANE
+    Route::get('plane', [PlaneController::class, 'getAll']);
+    Route::get('plane/{limit}/{offset}', [PlaneController::class, 'getAll']);
+    Route::get('plane/{id_transportation}', [PlaneController::class, 'getById']);
+    Route::post('plane', [PlaneController::class, 'insert']);
+    Route::post('findTrain/{limit}/{offset}', [PlaneController::class, 'find']);
+    Route::put('plane/{id}', [PlaneController::class, 'update']);
+    Route::delete('plane/{id_transportation}', [PlaneController::class, 'destroy']);
+
+    //API BUS
+    Route::get('bus', [BuswayController::class, 'getAll']);
+    Route::get('bus/{limit}/{offset}', [BuswayController::class, 'getAll']);
+    Route::get('bus/{id_transportation}', [BuswayController::class, 'getById']);
+    Route::post('bus', [BuswayController::class, 'insert']);
+    Route::post('findTrain/{limit}/{offset}', [BuswayController::class, 'find']);
+    Route::put('bus/{id}', [BuswayController::class, 'update']);
+    Route::delete('bus/{id_transportation}', [BuswayController::class, 'destroy']);
 
     //API USER
     Route::get('user', [UserController::class, 'getAll']);

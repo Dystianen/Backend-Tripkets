@@ -21,7 +21,4 @@ class Transaction extends Model
         return $this->belongsTo('App\Models\Transportation', 'id_transportation', 'id_transportation');
     }
 
-    public function category(){
-        return $this->belongsTo('App\Models\Category', 'id_category', 'id_category');
-    }
 }

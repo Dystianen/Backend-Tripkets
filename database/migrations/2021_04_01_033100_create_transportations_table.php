@@ -17,8 +17,8 @@ class CreateTransportationsTable extends Migration
             $table->bigIncrements('id_transportation');
             $table->unsignedBigInteger('id_category');
             $table->string('transportation_name');
-            $table->string('stasiun_keberangkatan');
-            $table->string('stasiun_tujuan');
+            $table->string('p_depart');
+            $table->string('p_till');
             $table->string('price');
             $table->datetime('departure');
             $table->datetime('till');
