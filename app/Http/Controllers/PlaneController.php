@@ -64,6 +64,9 @@ class PlaneController extends Controller
         if($validator->fails()){
             return $this->response->errorResponse($validator->errors());
         }
+        $image = rand().$request->file('image')->getClientOriginalName();
+        $request->file('image')->move(base_path("./public/uploads"), $image);
+
         $data = new Transportation();
         $data->id_category = $request->id_category;
         $data->transportation_name = $request->transportation_name;
@@ -72,6 +75,7 @@ class PlaneController extends Controller
         $data->price = $request->price;
         $data->departure = $request->departure;
         $data->till = $request->till;
+        $data->image = $image;
         $data->save();
         $data = Transportation::where('id_transportation','=', $data->id_transportation)->first();
 

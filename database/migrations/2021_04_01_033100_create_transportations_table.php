@@ -22,6 +22,7 @@ class CreateTransportationsTable extends Migration
             $table->string('price');
             $table->datetime('departure');
             $table->datetime('till');
+            $table->string('image');
             $table->timestamps();
 
             $table->foreign('id_category')->references('id_category')->on('categories')->onDelete('cascade');

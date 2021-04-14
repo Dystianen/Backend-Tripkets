@@ -44,12 +44,13 @@ class TrainController extends Controller
     {
         $pdepart = $request->pdepart;
         $ptill = $request->ptill;
+        $tgl = $request->tgl;
         $data["count"] = Transportation::count();
 
         if($limit == NULL && $offset == NULL){
-            $data["transportations"] = Transportation::where([['p_depart','like', "%$pdepart%"], ['p_till','like', "%$ptill%"]])->orderBy('id_transportation', 'desc')->get();
+            $data["transportations"] = Transportation::where([['p_depart','like', "%$pdepart%"], ['p_till','like', "%$ptill%"], ['departure', 'like', "%$tgl%"]])->orderBy('id_transportation', 'desc')->get();
         } else {
-            $data["transportations"] = Transportation::where([['p_depart','like', "%$pdepart%"], ['p_till','like', "%$ptill%"]])->orderBy('id_transportation', 'desc')->take($limit)->skip($offset)->get();
+            $data["transportations"] = Transportation::where([['p_depart','like', "%$pdepart%"], ['p_till','like', "%$ptill%"], ['departure', 'like', "%$tgl%"]])->orderBy('id_transportation', 'desc')->take($limit)->skip($offset)->get();
         }
         return $this->response->successData($data);
     }
@@ -64,6 +65,10 @@ class TrainController extends Controller
         if($validator->fails()){
             return $this->response->errorResponse($validator->errors());
         }
+
+        $image = rand().$request->file('image')->getClientOriginalName();
+        $request->file('image')->move(base_path("./public/uploads"), $image);
+
         $data = new Transportation();
         $data->id_category = $request->id_category;
         $data->transportation_name = $request->transportation_name;
@@ -72,6 +77,7 @@ class TrainController extends Controller
         $data->price = $request->price;
         $data->departure = $request->departure;
         $data->till = $request->till;
+        $data->image = $image;
         $data->save();
         $data = Transportation::where('id_transportation','=', $data->id_transportation)->first();
 
